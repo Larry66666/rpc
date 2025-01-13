@@ -5,6 +5,7 @@ import com.yupi.yurpc.spi.SpiLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 序列化器工厂（用于获取序列化器对象）
@@ -12,9 +13,13 @@ import java.util.Map;
  */
 public class SerializerFactory {
 
-    static {
-        SpiLoader.load(Serializer.class);
-    }
+    /*static {
+        SpiLoader.load(Serializer.class); // 一次性加载了所有META-INF中声明的所有序列化器
+    }*/
+    /**
+     * 使用 AtomicReference 来确保线程安全的懒加载
+     */
+    private static final AtomicReference<Serializer> serializerRef = new AtomicReference<>();
 
     /**
      * 默认序列化器
@@ -22,11 +27,21 @@ public class SerializerFactory {
     private static final Serializer DEFAULT_SERIALIZER = new JdkSerializer();
 
     /**
-     * 获取实例
+     * 获取实例(双重检查锁定)
      * @param key
      * @return
      */
     public static Serializer getInstance(String key) {
-        return SpiLoader.getInstance(Serializer.class, key);
+        Serializer serializer = serializerRef.get();
+        if (serializer == null) {
+            synchronized (SerializerFactory.class) {
+                serializer = serializerRef.get();
+                if (serializer == null) {
+                    serializer = SpiLoader.getInstance(Serializer.class, key);
+                    serializerRef.set(serializer);
+                }
+            }
+        }
+        return serializer;
     }
 }
