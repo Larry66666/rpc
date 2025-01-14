@@ -63,7 +63,9 @@ public class SpiLoader {
 
     /**
      * 获取某个接口的实例
-     *
+     * 1、由于经过懒加载后已经load了指定的序列化器的类e.g.com.yupi.yurpc.serializer.JdkSerializer
+     * 2、根据com.yupi.yurpc.serializer.JdkSerializer得到类名"com.yupi.yurpc.serializer.JdkSerializer"
+     * 3、去instanceCache里根据key找具体的实现类方法 key:"com.yupi.yurpc.serializer.JdkSerializer" value: new JdkSerializer()
      * @param tClass
      * @param key
      * @param <T>
@@ -94,7 +96,10 @@ public class SpiLoader {
 
     /**
      * 加载某个类型(懒加载)
-     *
+     * 1、根据loadClass e.g.com.yupi.yurpc.serializer.Serializer，通过loadClass.getName();获取到“com.yupi.yurpc.serializer.Serializer"
+     * 2、根据“com.yupi.yurpc.serializer.Serializer"查loaderMap，找到Serializer下的具体实现类，e.g. “com.yupi.yurpc.serializer.Serializer"查key="jdk"的具体实现类com.yupi.yurpc.serializer.JdkSerializer
+     * 3、封装好loaderMap <com.yupi.yurpc.serializer.Serializer, "jdk", com.yupi.yurpc.serializer.JdkSerializer>
+     *                  |----------   tClassName     --------|, |------Map<String, Class<?>>-----------------|
      * @param loadClass
      * @throws IOException
      */
@@ -115,7 +120,7 @@ public class SpiLoader {
                                 String className = strArray[1];
                                 implClass = Class.forName(className);
                                 keyClassMap.put(key, implClass);
-                                log.info("加载序列化器: key={}, 类名={}", key, className);
+                                log.info("加载类: 接口={}, key={}, 类名={}", tClassName, key, className);
                                 break;
                             }
                         }
