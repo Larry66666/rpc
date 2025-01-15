@@ -1,9 +1,12 @@
 package com.yupi.yurpc.registry;
 
+import cn.hutool.core.lang.hash.Hash;
 import com.yupi.yurpc.config.RegistryConfig;
 import com.yupi.yurpc.model.ServiceMetaInfo;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 注册中心
@@ -42,4 +45,15 @@ public interface Registry {
      * 服务销毁
      */
     void destroy();
+
+    /**
+     * 心跳检测（服务端）
+     */
+    void heartBeat();
+
+    /**
+     * 监听（消费端）
+     * @param serviceKey
+     */
+    void watch(String serviceKey);
 }
