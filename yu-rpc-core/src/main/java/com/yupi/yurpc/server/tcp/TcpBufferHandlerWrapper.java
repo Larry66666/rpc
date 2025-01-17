@@ -6,7 +6,7 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.parsetools.RecordParser;
 
 /**
- * 装饰者模式（使用 recordParser 对原有的 buffer 处理能力进行增强）
+ * 装饰者模式（使用 recordParser 对原有的 buffer 处理能力进行增强）处理半包粘包
  */
 public class TcpBufferHandlerWrapper implements Handler<Buffer> {
 
@@ -44,7 +44,7 @@ public class TcpBufferHandlerWrapper implements Handler<Buffer> {
                     resultBuffer.appendBuffer(buffer);
                     // 已拼接为完整 Buffer，执行处理
                     bufferHandler.handle(resultBuffer);
-                    // 重置一轮
+                    // 重置一轮，初始化下一个到达的请求
                     parser.fixedSizeMode(ProtocolConstant.MESSAGE_HEADER_LENGTH);
                     size = -1;
                     resultBuffer = Buffer.buffer();

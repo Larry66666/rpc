@@ -1,5 +1,6 @@
 package com.yupi.yurpc.config;
 
+import com.yupi.yurpc.loadbalancer.LoadBalancerKeys;
 import com.yupi.yurpc.registry.RegistryKeys;
 import com.yupi.yurpc.serializer.Serializer;
 import com.yupi.yurpc.serializer.SerializerKeys;
@@ -50,4 +51,9 @@ public class RpcConfig {
      * 注册中心
      */
     private String registry = RegistryKeys.ETCD;
+
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 }
