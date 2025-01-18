@@ -23,7 +23,7 @@ public class ServiceProxyFactory {
         else return (T) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, new ServiceProxy());
     }
 
-    private static <T> T getMockProxy(Class<T> serviceClass) {
+    public static <T> T getMockProxy(Class<T> serviceClass) {
         return (T) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, new MockServiceProxy());
     }
 }
