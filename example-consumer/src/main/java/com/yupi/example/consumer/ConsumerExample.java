@@ -2,6 +2,7 @@ package com.yupi.example.consumer;
 
 import com.yupi.example.common.model.User;
 import com.yupi.example.common.service.UserService;
+import com.yupi.yurpc.bootstrap.ConsumerBootstrap;
 import com.yupi.yurpc.config.RpcConfig;
 import com.yupi.yurpc.constant.RpcConstant;
 import com.yupi.yurpc.proxy.ServiceProxyFactory;
@@ -12,9 +13,9 @@ import com.yupi.yurpc.utils.ConfigUtils;
  */
 public class ConsumerExample {
     public static void main(String[] args) {
-        // 加载配置
-        RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.DEFAULT_CONFIG_PREFIX);
-        System.out.println(rpc);
+
+        // 服务提供者初始化
+        ConsumerBootstrap.init();
 
         // 静态代理
         // UserService userService = new UserServiceProxy();
